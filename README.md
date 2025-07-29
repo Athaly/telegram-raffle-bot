@@ -9,7 +9,7 @@ Los sorteos son persistentes: podés ver ganadores anteriores, reutilizar listas
 ## 🚀 Instalación rápida
 
 ```bash
-git clone git@github.com:valentinoloza/telegram-raffle-bot.git
+git clone git@github.com:athaly/telegram-raffle-bot.git
 cd telegram-raffle-bot
 chmod +x install.sh
 ./install.sh
