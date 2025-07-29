@@ -1,0 +1,21 @@
+{
+    "test": {
+        "participantes": [],
+        "ganadores": []
+    },
+    "aldeanisimo": {
+        "participantes": [
+            "azalea",
+            "angeles",
+            "carlos",
+            "valen",
+            "angeles",
+            "azalea",
+            "valen",
+            "carlos"
+        ],
+        "ganadores": [
+            "valen"
+        ]
+    }
+}
