@@ -6,21 +6,23 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from dotenv import load_dotenv
 
-#Carga el token del bot
+# Carga el token del bot
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 # Ruta del archivo JSON
 DATA_FILE = "raffles.json"
 
 # Lista de administradores (usá tu user_id)
-ADMINS = [618375676,7340475915,8089593517,924633509]
+ADMINS = [618375676, 7340475915, 8089593517, 924633509]
 
 # Diccionario principal de sorteos
 raffles = {}
 
 # ---------------------- Persistencia ----------------------
 
+
 def load_data():
+    """Load raffles from ``DATA_FILE`` if it exists."""
     global raffles
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
@@ -28,23 +30,34 @@ def load_data():
     else:
         raffles = {}
 
+
 def save_data():
+    """Write the current raffle data to ``DATA_FILE``."""
     with open(DATA_FILE, "w") as f:
         json.dump(raffles, f, indent=4)
 
 # ---------------------- Utilidades ------------------------
+
 
 def is_admin(update: Update) -> bool:
     return update.effective_user.id in ADMINS
 
 # ---------------------- Comandos --------------------------
 
-#Inicia el bot en el chat correspondiente
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text("Bot de sorteos listo. Usá /help para ver comandos.")
 
-#Comando help en telegram
+# Inicia el bot en el chat correspondiente
+
+def start(update: Update, context: CallbackContext):
+    """Send a welcome message and basic instructions."""
+    update.message.reply_text(
+        "Bot de sorteos listo. Usá /help para ver comandos."
+    )
+
+# Comando help en telegram
+
+
 def help_command(update: Update, context: CallbackContext):
+    """Display the list of available commands."""
     update.message.reply_text(
         "/newraffle <nombre>\n"
         "/add <sorteo> <participante>\n"
@@ -54,8 +67,11 @@ def help_command(update: Update, context: CallbackContext):
         "/clear <sorteo>"
     )
 
-#Crea un nuevo sorteo
+# Crea un nuevo sorteo
+
+
 def new_raffle(update: Update, context: CallbackContext):
+    """Create a raffle with the given name."""
     if not is_admin(update):
         update.message.reply_text("Solo admins pueden crear sorteos.")
         return
@@ -70,10 +86,15 @@ def new_raffle(update: Update, context: CallbackContext):
     save_data()
     update.message.reply_text(f"Sorteo '{name}' creado.")
 
-#Añadir participantes nuevo(s)
+# Añadir participantes nuevo(s)
+
+
 def add_participant(update: Update, context: CallbackContext):
+    """Add one or more participants to a raffle."""
     if not is_admin(update):
-        update.message.reply_text("Solo los administradores pueden agregar participantes.")
+        update.message.reply_text(
+            "Solo los administradores pueden agregar participantes."
+        )
         return
 
     if len(context.args) < 2:
@@ -96,14 +117,19 @@ def add_participant(update: Update, context: CallbackContext):
     save_data()
 
     update.message.reply_text(
-        f"Se agregaron {len(nombres)} participante(s) al sorteo '{nombre_sorteo}':\n" +
-        "\n".join(nombres)
+        f"Se agregaron {len(nombres)} participante(s) al sorteo "
+        f"'{nombre_sorteo}':\n" + "\n".join(nombres)
     )
 
-#Borrar el sorteo
+
+# Borrar el sorteo
+
 def delete_raffle(update: Update, context: CallbackContext):
+    """Delete a raffle and all its data."""
     if not is_admin(update):
-        update.message.reply_text("Solo los administradores pueden eliminar sorteos.")
+        update.message.reply_text(
+            "Solo los administradores pueden eliminar sorteos."
+        )
         return
 
     if not context.args:
@@ -117,10 +143,14 @@ def delete_raffle(update: Update, context: CallbackContext):
 
     del raffles[nombre]
     save_data()
-    update.message.reply_text(f"El sorteo '{nombre}' fue eliminado por completo.")
+    update.message.reply_text(
+        f"El sorteo '{nombre}' fue eliminado por completo."
+    )
 
-#Listar participantes
+
+# Listar participantes
 def list_participants(update: Update, context: CallbackContext):
+    """Show all participants registered in a raffle."""
     if not context.args:
         update.message.reply_text("Uso: /list <sorteo>")
         return
@@ -132,10 +162,14 @@ def list_participants(update: Update, context: CallbackContext):
     if not lista:
         update.message.reply_text(f"No hay participantes en '{name}'.")
     else:
-        update.message.reply_text(f"Participantes en '{name}':\n" + "\n".join(lista))
+        update.message.reply_text(
+            f"Participantes en '{name}':\n" + "\n".join(lista)
+        )
 
-#Realiza el sorteo
+
+# Realiza el sorteo
 def do_raffle(update: Update, context: CallbackContext):
+    """Choose a random winner for the specified raffle."""
     if not context.args:
         update.message.reply_text("Uso: /raffle <sorteo>")
         return
@@ -152,8 +186,10 @@ def do_raffle(update: Update, context: CallbackContext):
     save_data()
     update.message.reply_text(f"🎉 El ganador de '{name}' es: {ganador}")
 
-#Ganador
+
+# Ganador
 def winners(update: Update, context: CallbackContext):
+    """List winners of a raffle."""
     if not context.args:
         update.message.reply_text("Uso: /winners <sorteo>")
         return
@@ -165,12 +201,18 @@ def winners(update: Update, context: CallbackContext):
     if not ganadores:
         update.message.reply_text(f"Aún no hay ganadores en '{name}'.")
     else:
-        update.message.reply_text(f"Ganadores de '{name}':\n" + "\n".join(ganadores))
+        update.message.reply_text(
+            f"Ganadores de '{name}':\n" + "\n".join(ganadores)
+        )
 
-#Limpia la lista de nombres del sorteo especificado
+
+# Limpia la lista de nombres del sorteo especificado
 def clear_raffle(update: Update, context: CallbackContext):
+    """Remove all participants and winners from a raffle."""
     if not is_admin(update):
-        update.message.reply_text("Solo los administradores pueden vaciar sorteos.")
+        update.message.reply_text(
+            "Solo los administradores pueden vaciar sorteos."
+        )
         return
 
     if not context.args:
@@ -190,7 +232,9 @@ def clear_raffle(update: Update, context: CallbackContext):
 
 # ---------------------- Main ------------------------------
 
+
 def main():
+    """Set up handlers and start the bot."""
     load_data()
     updater = Updater(BOT_TOKEN, use_context=True)
     dp = updater.dispatcher
@@ -207,6 +251,7 @@ def main():
 
     updater.start_polling()
     updater.idle()
+
 
 if __name__ == "__main__":
     main()
