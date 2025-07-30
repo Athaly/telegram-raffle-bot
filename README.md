@@ -1,12 +1,10 @@
-# 🎲 CaperuRaffleBot
+# CaperuRaffleBot
 
-**Bot exclusivo para la comunidad de @Caperubetabot.**  
+Bot exclusivo para la comunidad de @Caperubetabot.  
 Permite crear sorteos con nombre, agregar participantes y realizar sorteos aleatorios.  
-Los sorteos son persistentes: podés ver ganadores anteriores, reutilizar listas o vaciarlas según sea necesario.
+Los sorteos son persistentes: se puede ver ganadores anteriores, reutilizar listas o vaciarlas según sea necesario.
 
----
-
-## 🚀 Instalación rápida
+## Instalación rápida
 
 ```bash
 git clone git@github.com:athaly/telegram-raffle-bot.git
@@ -15,28 +13,22 @@ chmod +x install.sh
 ./install.sh
 ```
 
----
+## Archivo `.env`
 
-## ⚙️ Archivo `.env`
-
-Antes de ejecutar el bot, creá un archivo `.env` con:
+Antes de ejecutar el bot, crear un archivo `.env` con el siguiente contenido:
 
 ```env
 BOT_TOKEN=123456789:AAEtcTuTokenPrivado
 ```
 
----
-
-## ▶️ Cómo ejecutar el bot
+## Cómo ejecutar el bot
 
 ```bash
 source env/bin/activate
 python main.py
 ```
 
----
-
-## 📜 Comandos disponibles
+## Comandos disponibles
 
 ```
 /start - Inicia el bot
@@ -50,8 +42,6 @@ python main.py
 /delete <sorteo> - Elimina el sorteo por completo
 ```
 
----
-
-## 👤 Desarrollado por
+## Desarrollado por
 
 [@sshvalen](https://t.me/sshvalen) para la comunidad de @Caperubetabot
